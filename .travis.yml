@@ -9,16 +9,14 @@ before_script:
   - docker-compose run --rm app php ./tests/Keboola/loadS3.php
   - docker-compose run --rm app vendor/bin/phpunit
   - docker pull quay.io/keboola/developer-portal-cli-v2:latest
-  - export REPOSITORY=`docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD quay.io/keboola/developer-portal-cli-v2:latest ecr:get-repository keboola keboola.ex-db-redshift`
+  - export REPOSITORY=`docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD quay.io/keboola/developer-portal-cli-v2:latest ecr:get-repository keboola keboola.ex-db-redshift-cursors`
   - docker tag keboola/ex-db-redshift:latest $REPOSITORY:master
-  - eval $(docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD quay.io/keboola/developer-portal-cli-v2:latest ecr:get-login keboola keboola.ex-db-redshift)
+  - eval $(docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD quay.io/keboola/developer-portal-cli-v2:latest ecr:get-login keboola keboola.ex-db-redshift-cursors)
   - docker push $REPOSITORY:master
   - docker pull quay.io/keboola/syrup-cli:latest
 
 script:
-  - docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job keboola.ex-db-redshift 287551509 master
-  - docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job keboola.ex-db-redshift 287589655 master
-  - docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job keboola.ex-db-redshift 315245768 master
+
 
 deploy:
   provider: script
@@ -27,6 +25,4 @@ deploy:
   on:
     tags: true
 
-notifications:
-  slack:
-    secure: ZJFRAM1U+O+JDENPxmHPwgG/KJ5C/lk77s5dqpUW1/MGFOegQ3ewWxwYVm9JzYq/XSL9tO5b/DHkC4LR0mXW4mhtXnJWIowMKLoyi0FavVQsJE/seFtuGiRqXMq/vnB57fCIYInf26uZAAbXD0JVLzYne0dvVomoqjZSwh3mbLu75RC2AFYrB96h5KYi/P0MiTrVVfTmmely0qbhittq9JUq+X5+WkuoaL2UGzGtj4K5nhgimQ3+FsB6kqTAOvbUXgrpIyRDtiOWzZvkQ6eHRgpj9Eb37RXDUlVuOWO4t0HuF9DyRT0mOwrevESyGtXZSLZowknVJivtbjaX2TIrUObqlYwxYON3guqiHiKs9zjvvq1wtE+mr8c8UCRlHw/FOH0KjkvOukf5iUmq0mMi4MwyPI56dlZgbORWtkn92aUMacysy4to9vn+MQil58TwD7FoRCzZb19rPxB1FvDntQNdEyxbwZPbNroboB7Dlzj0q22prnebA1OlcJxbFX29nOJ3yqyztUrbpoTln6i1lIpgUbFAoe2jBVmgO3uDS4InmiM8w5RsCA2w4cDfDYwTpBPSB0ToSxOL2dQNO4mNo9xYQw9QF/Z4DxGRRSr/7yoIKB67BUR/PMmr2ZBumMikgNJj4174p5MgReVkzqaUZCXzc2ceCA3V+jHaiGY7vc0=
+
